@@ -1,0 +1,43 @@
+import requests
+import json
+from lxml import etree
+import openpyxl
+
+url = 'https://voice.baidu.com/act/newpneumonia/newpneumonia/?from=osari_aladin_banner'
+
+response = requests.get(url=url,).text
+#在使用xpath的时候要用树形态
+html = etree.HTML(response)
+
+json_text = html.xpath('//script[@type="application/json"]/text()')
+json_text = json_text[0]
+
+result = json.loads(json_text)
+# print(result)
+
+result = result["component"]
+
+# print(result)
+# 获取数据
+result = result[0]['caseList']#
+print(result)
+
+
+# 创建工作簿
+wb = openpyxl.Workbook()
+# 创建工作表
+ws = wb.active
+# 设置表的标题
+ws.title = "新冠疫情"
+# 写入表头
+ws.append(["疫情地区","累计确诊","治愈","死亡"])
+# 获取各地区的数据并写入
+for line in result:
+    line_name = [line["area"],line["confirmed"],line["crued",line["died"]]]
+    for ele in line_name:
+        if ele == '':
+           ele = 0
+    ws.append(line_name)
+
+# 保存到csv文件中
+wb.save('./xinguan data.csv')
