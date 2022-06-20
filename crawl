@@ -1,0 +1,26 @@
+import urllib.request
+import urllib
+
+# 新冠疫情 百度网址 url~
+url = 'https://voice.baidu.com/act/newpneumonia/newpneumonia/?from=osari_aladin_banner'
+
+'''
+urllib.request.urlretrieve(url,'./htm1.htm')
+'''
+
+# 创建request请求对象
+request = urllib.request.Request(url)
+
+# 发送请求获取结果
+response = urllib.request.urlopen(request)
+
+htmldata = response.read()
+
+# 设置编码方式
+htmldata = htmldata.decode('utf-8')
+
+# 保存到html文件
+
+fileOb = open('baidu xinguan.html','w',encoding='utf-8')
+fileOb.write(htmldata)
+fileOb.close()
